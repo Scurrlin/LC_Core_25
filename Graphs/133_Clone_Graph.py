@@ -1,16 +1,15 @@
-from typing import Optional
-
 class Solution:
-    def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node: return node
-        q, clones = deque([node]), {node.val: Node(node.val, [])}
-        
-        while q:
-            cur = q.popleft() 
-            cur_clone = clones[cur.val]            
-            for ngbr in cur.neighbors:
-                if ngbr.val not in clones:
-                    clones[ngbr.val] = Node(ngbr.val, [])
-                    q.append(ngbr)
-                cur_clone.neighbors.append(clones[ngbr.val])
-        return clones[node.val]
+    def cloneGraph(self, node: "Node") -> "Node":
+        newGraph = {}
+
+        def dfs(node):
+            if node in newGraph:
+                return newGraph[node]
+
+            copy = Node(node.val)
+            newGraph[node] = copy
+            for n in node.neighbors:
+                copy.neighbors.append(dfs(n))
+            return copy
+
+        return dfs(node) if node else None
